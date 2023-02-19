@@ -1,8 +1,39 @@
 from sqlalchemy.orm import Session
-
+import random
 from Lib import models, schemas
 from Lib.models import User,Todo
+import random
 
+#query(Todo).filter_by(owner_id=user_id).order_by(func.random())
+#exec(select(User.items)..filter_by(owner_id=user_id)order_by(func.random())).first()
+
+
+def randomize(list):
+  number=random.randint(0, len(list)-1)
+  thislist = []
+  for item in list:
+      thislist.append(item)
+     
+  lastitem=thislist[number]
+  return lastitem.id
+
+ 
+
+
+
+
+def get_random_item(db: Session,user_id:int):
+    obj = db.query(User).filter_by(id=user_id).first()
+    items = obj.items
+    if items:
+      first_item = items[0]
+      sec ={first_item.title,first_item.description,first_item.id,first_item.owner_id}
+      return sec
+    else:
+      return None
+
+
+    
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
@@ -56,6 +87,10 @@ def get_items(db: Session):
         return items
 
 
+
+
+
+
 def create_user_item(db: Session, item: schemas.TodoCreate, user_id: int):
     db_item = Todo(**item.dict(), owner_id=user_id)
     db.add(db_item)
@@ -74,6 +109,9 @@ def update_user_item(db: Session,id:int  ,item: schemas.TodoCreate,user_id:int):
       return True
      else :
       return False
+
+
+
 
 
 

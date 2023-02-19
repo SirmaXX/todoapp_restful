@@ -60,4 +60,5 @@ class Todo(Base):
 
 Base.metadata.create_all(bind=engine)
 
+
 session.commit()

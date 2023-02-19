@@ -58,7 +58,12 @@ async def update_user(user1:UserCreate,id:int,db: Session = Depends(get_db)):
 #todolist bölümü
 
 
-
+@usersroute.get("/{user_id}/random/items", response_model=User)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_random_item(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
 
 
 @usersroute.get("/{user_id}/items", response_model=User)

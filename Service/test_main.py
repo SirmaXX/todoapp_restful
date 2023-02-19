@@ -23,7 +23,7 @@ def test_users():
     assert response.json() == {}
 
 postuser={
-  "username": "postuser1",
+  "email": "postuser1",
   "password": "deneme123"
 }
 
