@@ -11,8 +11,8 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
+def get_users(db: Session):
+    return db.query(User).all()
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -48,8 +48,12 @@ def updateuser(db: Session,user1,id:int):
 
 
 #-------------------------------------------------        
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Todo).offset(skip).limit(limit).all()
+def get_items(db: Session):
+    items = db.query(Todo).all()
+    if not items:
+        return {}
+    else :
+        return items
 
 
 def create_user_item(db: Session, item: schemas.TodoCreate, user_id: int):
@@ -62,8 +66,8 @@ def create_user_item(db: Session, item: schemas.TodoCreate, user_id: int):
 
 
 def update_user_item(db: Session,id:int  ,item: schemas.TodoCreate,user_id:int):
-     user =get_user(db,id)
-     if user != None:
+     todo = db.query(Todo).filter_by(id=id,owner_id=user_id).first()
+     if  todo != None:
       db.query(Todo).filter_by(id=id,owner_id=user_id).update(
       dict(title=item.title, description=item.description))
       db.commit()
